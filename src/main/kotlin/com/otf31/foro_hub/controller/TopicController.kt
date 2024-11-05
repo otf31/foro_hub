@@ -33,6 +33,7 @@ class TopicController @Autowired constructor(
   private val topicRepository: TopicRepository,
   private val validators: List<ValidatorOfTopics>
 ) {
+
   @GetMapping
   fun getTopics(
     @ParameterObject
@@ -132,7 +133,6 @@ object TopicSpecifications {
 
   fun hasCreatedAtYear(year: Int): Specification<Topic> {
     val startDate = LocalDateTime.of(year, 1, 1, 0, 0)
-
 
     return Specification { root, _, cb ->
       cb.between(root.get<LocalDateTime>("createdAt"), startDate, startDate.plusYears(1))
