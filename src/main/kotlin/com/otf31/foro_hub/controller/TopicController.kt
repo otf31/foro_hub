@@ -6,13 +6,12 @@ import com.otf31.foro_hub.domain.topics.DataResponseTopic
 import com.otf31.foro_hub.domain.topics.Topic
 import com.otf31.foro_hub.domain.topics.TopicRepository
 import com.otf31.foro_hub.domain.topics.validations.ValidatorOfTopics
-import jakarta.persistence.EntityNotFoundException
+import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.data.web.PagedModel
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -56,11 +55,12 @@ class TopicController @Autowired constructor(
   }
 
   @GetMapping("{id}")
+  @Transactional
   fun getTopicById(
     @PathVariable
     id: Long
   ): ResponseEntity<DataResponseTopic> {
-    val topic = topicRepository.findByIdOrNull(id) ?: throw EntityNotFoundException("Topic not found")
+    val topic = topicRepository.getReferenceById(id)
     val dataResponseTopic = DataResponseTopic.from(topic)
 
     return ResponseEntity.ok(dataResponseTopic)
@@ -84,6 +84,7 @@ class TopicController @Autowired constructor(
   }
 
   @PutMapping("{id}")
+  @Transactional
   fun updateTopic(
     @PathVariable
     id: Long,
@@ -94,23 +95,23 @@ class TopicController @Autowired constructor(
     // Validate according to the rules
     validators.forEach { it.validate(dataCreateUpdateTopic) }
 
-    val topic = topicRepository.findByIdOrNull(id) ?: throw EntityNotFoundException("Topic not found")
+    val topic = topicRepository.getReferenceById(id)
     topic.update(dataCreateUpdateTopic)
-
     val updatedTopic = topicRepository.save(topic)
 
     return ResponseEntity.ok(DataResponseTopic.from(updatedTopic))
   }
 
   @DeleteMapping("{id}")
+  @Transactional
   fun deleteTopic(
     @PathVariable
     id: Long
-  ): ResponseEntity<Unit> {
+  ): ResponseEntity<String> {
     // Check if the topic exists
-    topicRepository.findByIdOrNull(id) ?: throw EntityNotFoundException("Topic not found")
+    val topic = topicRepository.getReferenceById(id)
 
-    topicRepository.deleteById(id)
+    topicRepository.delete(topic)
 
     return ResponseEntity.noContent().build()
   }
