@@ -15,24 +15,27 @@ data class Topic(
   var status: String = "NOT_ANSWERED",
   var author: String = "",
   var course: String = "",
-  val createdAt: LocalDateTime = LocalDateTime.now()
+  var createdAt: LocalDateTime = LocalDateTime.now()
 ) {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   val id: Long? = null
 
   companion object {
-    fun from(dataCreateUpdateTopic: DataCreateUpdateTopic): Topic =
+    fun from(
+      dataCreateUpdateTopic: DataCreateUpdateTopic
+    ): Topic =
       Topic(
-        dataCreateUpdateTopic.title,
-        dataCreateUpdateTopic.message,
-        "NOT_ANSWERED",
-        dataCreateUpdateTopic.author,
-        dataCreateUpdateTopic.course
+        title = dataCreateUpdateTopic.title,
+        message = dataCreateUpdateTopic.message,
+        author = dataCreateUpdateTopic.author,
+        course =  dataCreateUpdateTopic.course,
       )
   }
 
-  fun update(dataCreateUpdateTopic: DataCreateUpdateTopic) {
+  fun update(
+    dataCreateUpdateTopic: DataCreateUpdateTopic
+  ) {
     title = dataCreateUpdateTopic.title
     message = dataCreateUpdateTopic.message
     author = dataCreateUpdateTopic.author
