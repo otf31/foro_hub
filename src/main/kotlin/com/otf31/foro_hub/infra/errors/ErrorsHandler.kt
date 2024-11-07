@@ -1,8 +1,11 @@
 package com.otf31.foro_hub.infra.errors
 
+import com.auth0.jwt.exceptions.JWTVerificationException
 import com.otf31.foro_hub.domain.ValidationException
 import jakarta.persistence.EntityNotFoundException
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -17,7 +20,6 @@ class ErrorsHandler {
     e: ValidationException
   ): ResponseEntity<String> =
     ResponseEntity.badRequest().body(e.message)
-
 
   @ExceptionHandler(MethodArgumentNotValidException::class)
   fun handleError400(
@@ -38,6 +40,19 @@ class ErrorsHandler {
     e: MethodArgumentTypeMismatchException
   ): ResponseEntity<String> =
     ResponseEntity.badRequest().body("The IDENTIFIER ${e.name} must be a ${e.requiredType}")
+
+  @ExceptionHandler(HttpMessageNotReadableException::class)
+  fun handleHttpMessageNotReadableException(
+  ): ResponseEntity<String> =
+    ResponseEntity.badRequest().body("Required request body is missing or unreadable")
+
+  @ExceptionHandler(JWTVerificationException::class)
+  fun handleJWTVerificationException(e: JWTVerificationException): ResponseEntity<String> =
+    ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token: ${e.message}")
+
+  @ExceptionHandler(Exception::class)
+  fun handleRuntimeException(e: Exception): ResponseEntity<String> =
+    ResponseEntity.internalServerError().body("An unexpected error occurred: ${e.message}")
 
   @JvmRecord
   data class DataErrorValidation(

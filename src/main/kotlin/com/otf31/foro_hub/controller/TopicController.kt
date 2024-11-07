@@ -6,6 +6,7 @@ import com.otf31.foro_hub.domain.topics.DataResponseTopic
 import com.otf31.foro_hub.domain.topics.Topic
 import com.otf31.foro_hub.domain.topics.TopicRepository
 import com.otf31.foro_hub.domain.topics.validations.ValidatorOfTopics
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import org.springdoc.core.annotations.ParameterObject
@@ -26,8 +27,10 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.util.UriComponentsBuilder
 import java.time.LocalDateTime
 
+
 @RestController
 @RequestMapping("topics")
+@SecurityRequirement(name = "bearer-key")
 class TopicController @Autowired constructor(
   private val topicRepository: TopicRepository,
   private val validators: List<ValidatorOfTopics>

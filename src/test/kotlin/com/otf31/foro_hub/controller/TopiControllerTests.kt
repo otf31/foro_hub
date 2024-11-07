@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
-class TopiControllerTest @Autowired constructor(
+class TopiControllerTests @Autowired constructor(
   private val mockMvc: MockMvc,
   private val dataRegisterTopicJson: JacksonTester<DataCreateUpdateTopic>,
   private val dataResponseTopicJson: JacksonTester<DataResponseTopic>,

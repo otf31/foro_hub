@@ -12,7 +12,7 @@ import kotlin.test.Test
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
-class TopicRepositoryTest @Autowired constructor(
+class TopicRepositoryTests @Autowired constructor(
   private val topicRepository: TopicRepository,
   private val entityManager: EntityManager
 ) {
