@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.util.UriComponentsBuilder
 import java.time.LocalDateTime
 
-
 @RestController
 @RequestMapping("topics")
 @SecurityRequirement(name = "bearer-key")
